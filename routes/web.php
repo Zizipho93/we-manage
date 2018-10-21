@@ -16,9 +16,11 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::get('/new_invite/{name}/{email}/{project_id}', 'ProjectController@visitors')->name('invites');
 
 Route::group([ 'middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/deleteProject/{projectId}', 'ProjectController@delete')->name('deleteProject');
 
     Route::get('/new_project', 'ProjectController@newProject')->name('project');
 

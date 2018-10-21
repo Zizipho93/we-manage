@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Project;
 use Illuminate\Http\Request;
-
 use Auth;
+use Mail;
+use App\Http\Controllers\Auth\RegisterController;
 
 class ProjectController extends Controller
 {
+
     public function newProject(){
         return view('newProject');
     }
@@ -17,6 +19,7 @@ class ProjectController extends Controller
             'description' => $request->description,
             'invitations' => $request->email_invites,
         ]);
+        //$this->sendEmailInvites($request->toArray(),$projectId);
         $user_id = Auth::user()->id;
 
         \DB::table('user_project')->insert([
@@ -30,5 +33,24 @@ class ProjectController extends Controller
     public function newTasks($id){
         $project  = \DB::table('project')->select('id','name')->where('id', '=' , $id)->get();
         return view('tasksBreakDown')->with(compact('project'));
+    }
+
+    public function visitors($name,$email,$projectId){
+        $data['name'] = 'Amazing';
+        $data['email']= 'mggff@gmail.coz';
+        $data['project_id'] = $projectId;
+        $data['invite'] = true;
+        $data['password'] = 'secret';
+        $visitor = new RegisterController();
+        $user = $visitor->createVisitors($data);
+        Auth::login($user);
+        return redirect('home');
+    }
+
+    public function delete($projectId)
+    {
+        $project = Project::find($projectId);
+        $project->delete();
+        return redirect('home')->with('success','successfully deleted project');
     }
 }

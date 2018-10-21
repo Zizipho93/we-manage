@@ -63,14 +63,32 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $role_admin = \App\Role::where('name','=','Admin')->first();
-        $user = new  \App\User();
+        $user = null ;
+        if($data['invite'] == true){
+            $role_user = \App\Role::where('name','=','User')->first();
+            $user = new  \App\User();
 
-        $user->name = $data['name'];
-        $user->email = $data['email'];
-        $user->password = Hash::make($data['password']);
-        $user->save();
-        $user->roles()->attach($role_admin);
+            $user->name = $data['name'];
+            $user->email = $data['email'];
+            $user->password = Hash::make($data['password']);
+            $user->save();
+            $user->roles()->attach($role_user);
+            return $user;
+        }else{
+            $role_admin = \App\Role::where('name','=','Admin')->first();
+            $user = new  \App\User();
+
+            $user->name = $data['name'];
+            $user->email = $data['email'];
+            $user->password = Hash::make($data['password']);
+            $user->save();
+            $user->roles()->attach( $role_admin);
+            return $user;
+        }
+
+    }
+    public function createVisitors($data){
+        $user = $this->create($data);
         return $user;
     }
 }
