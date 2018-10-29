@@ -20,6 +20,7 @@ class ProjectController extends Controller
             'invitations' => $request->email_invites,
         ]);
         //$this->sendEmailInvites($request->toArray(),$projectId);
+        $this->build($projectId);
         $user_id = Auth::user()->id;
 
         \DB::table('user_project')->insert([
@@ -35,9 +36,21 @@ class ProjectController extends Controller
         return view('tasksBreakDown')->with(compact('project'));
     }
 
+    public function build($projectId)
+    {
+
+        $ap_url = route('invites',['tera','tembinkosi@gmail.com',$projectId]);
+//        $data['url'] = $ap_url;
+//        $data['name'] = 'tera fumba';
+//        $data['email'] = 'mazishna@gmail.com';
+
+        Mail::send('invites', ['data' => $ap_url], function ($message) {
+            $message->to('thembinkosi@sacap.edu.za');
+        });
+    }
     public function visitors($name,$email,$projectId){
         $data['name'] = 'Amazing';
-        $data['email']= 'mggff@gmail.coz';
+        $data['email']= 'thembinkosi@sacap.edu.za';
         $data['project_id'] = $projectId;
         $data['invite'] = true;
         $data['password'] = 'secret';
