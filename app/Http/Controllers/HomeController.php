@@ -24,12 +24,20 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user_id = Auth::user()->id;
-        $projects = Project::select('project.id','project.name','project.description')
-            ->join('user_project', 'user_project.project_id' ,'=', 'project.id')
-            ->join('users', 'users.id' ,'=', 'user_project.user_id')
-            ->where('users.id', '=' , $user_id)->get()->toArray();
+        if (Auth::user()->hasRole('Admin')){
+            $user_id = Auth::user()->id;
+            $projects = Project::select('project.id','project.name','project.description')
+                ->join('user_project', 'user_project.project_id' ,'=', 'project.id')
+                ->join('users', 'users.id' ,'=', 'user_project.user_id')
+                ->where('users.id', '=' , $user_id)->get()->toArray();
 
-        return view('home')->with(compact('projects'));
+            return view('home')->with(compact('projects'));
+        }
+        else{
+            $projects = Project::select('project.id','project.name','project.description')
+                ->join('project_invitation', 'project_invitation.project_id' , 'project.id')->get()->toArray();
+            return view('home')->with(compact('projects'));
+        }
+
     }
 }

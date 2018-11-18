@@ -9,6 +9,9 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import VueSweetAlert from 'vue-sweetalert';
+Vue.use(VueSweetAlert);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -16,6 +19,8 @@ window.Vue = require('vue');
  */
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('new-project', require('./components/newProject.vue'));
+Vue.component('assign-task', require('./components/assignTask.vue'));
 
 const app = new Vue({
     el: '#app'

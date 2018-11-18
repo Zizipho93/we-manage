@@ -20,10 +20,31 @@ Route::get('/new_invite/{name}/{email}/{project_id}', 'ProjectController@visitor
 
 Route::group([ 'middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/deleteProject/{projectId}', 'ProjectController@delete')->name('deleteProject');
 
-    Route::get('/new_project', 'ProjectController@newProject')->name('project');
+    Route::get('/deleteProject/{projectId}', [
+        'uses' => 'ProjectController@delete',
+        'middleware' => 'roles',
+        'roles'     => 'Admin'
+    ])->name('deleteProject');
+
+    Route::get('/new_project', [
+        'uses' => 'ProjectController@newProject',
+        'name' => 'project',
+        'middleware' => 'roles',
+        'roles'     => 'Admin'
+    ])->name('project');
 
     Route::post('/newProjectStore', 'ProjectController@store')->name('newProject');
-    Route::get('/newTasks/{id}', 'ProjectController@newTasks')->name('newTasks');
+    Route::get('/newTasks/{id}', [
+        'uses' => 'ProjectController@newTasks',
+//        'middleware' => 'roles',
+//        'roles'     => 'Admin'
+    ])->name('newTasks');
+
+    Route::get('/allusers', 'ProjectController@allusers')->name('allusers');
+
+      Route::post('/store_task', 'ProjectController@storeTask');
+    Route::get('/change_task_status/{id}', 'ProjectController@changeTaskStatus');
+       Route::get('/get_all_tasks/{id}', 'ProjectController@getAllTasks');
+    Route::get('/has_admin_rights', 'ProjectController@hasAdminPower');
 });

@@ -19,13 +19,13 @@
                 @if(isset($projects))
                     @foreach($projects as $project)
                         <li class="list-group-item"><a href="{{ route('newTasks',$project['id']) }}">{{ $project['name'] }}</a>
-                            <a href="{{ route('deleteProject',$project['id']) }}" class="btn btn-danger a-btn-slide-text " style="float: right;">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                <span><strong>Delete</strong></span>
-                            </a>
-                            <a href="#" class="btn btn-primary a-btn-slide-text " style="float: right;margin-right: 5px">
-                                <span class="fa fa-bug" aria-hidden="true"></span>
-                                <span><strong>Edit</strong></span>
+                            {{--<a href="{{ route('deleteProject',$project['id']) }}" class="btn btn-danger a-btn-slide-text " style="float: right;">--}}
+                                {{--<span class="fa fa-remove" aria-hidden="true"></span>--}}
+                                {{--<span><strong>Delete</strong></span>--}}
+                            {{--</a>--}}
+                            <a href="{{ route('newTasks',$project['id']) }}" class="btn btn-primary a-btn-slide-text " style="float: right;margin-right: 5px">
+                                <span class="fa fa-edit" aria-hidden="true"></span>
+                                <span><strong>Task Management</strong></span>
                             </a>
                         </li>
                     @endforeach
@@ -36,7 +36,10 @@
             </ul>
             <br>
             <div style="float: right">
-                <a href="{{ route('project') }}" type="submit" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i>Create New Project</a>
+                @if( Auth::user()->hasRole('Admin') )
+                    <a href="{{ route('project') }}" type="submit" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i>Create New Project</a>
+                @endif
+
             </div>
 
         </div>
